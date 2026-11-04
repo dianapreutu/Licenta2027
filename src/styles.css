@@ -1,0 +1,645 @@
+/* Culorile aplicației, definite o singură dată și refolosite peste tot */
+:root {
+  --color-primary: #c0607a;      /* rozul principal */
+  --color-primary-dark: #8e3d56; /* roz închis, pentru text pe fundal roz-pal */
+  --color-heading: #5b2a3c;      /* prun închis, pentru titluri (în loc de negru) */
+  --color-soft: #f6e1e7;         /* roz-pal, pentru butoane secundare */
+  --color-bg: #fbf6f7;
+  --color-surface: #ffffff;
+  --color-text: #3d2a31;
+  --color-muted: #8a7480;
+  --color-border: #eddde2;
+  --color-error: #b23a3a;
+  --radius: 14px;
+
+  --font-display: "Fraunces", Georgia, "Times New Roman", serif;
+  --font-body: "Nunito", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-body);
+  background: var(--color-bg);
+  color: var(--color-text);
+  line-height: 1.45;
+}
+
+button,
+input {
+  font-family: inherit;
+}
+
+/* Contur vizibil la navigarea cu tastatura */
+:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* ---------- Antet ---------- */
+.app-header {
+  background: var(--color-primary);
+  color: white;
+  padding: 12px 16px;
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: white;
+  text-decoration: none;
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+}
+
+/* Sigla: fundal și linie, cu culori diferite în antet și pe pagina de început */
+.logo .logo-bg { fill: var(--color-soft); }
+.logo .logo-line {
+  fill: none;
+  stroke: var(--color-primary);
+  stroke-width: 3.4;
+  stroke-linecap: round;
+}
+.logo .logo-stitches {
+  fill: none;
+  stroke: var(--color-primary);
+  stroke-width: 2;
+  stroke-linecap: round;
+  opacity: 0.55;
+}
+
+.app-header .logo .logo-bg { fill: rgba(255, 255, 255, 0.95); }
+
+/* ---------- Pagina de început ---------- */
+.welcome {
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 20px;
+  background:
+    radial-gradient(120% 60% at 50% 0%, #f8dfe6 0%, rgba(248, 223, 230, 0) 70%),
+    var(--color-bg);
+}
+
+.welcome-inner {
+  width: 100%;
+  max-width: 400px;
+  text-align: center;
+}
+
+.welcome-logo {
+  margin: 0 auto 20px;
+  display: block;
+  filter: drop-shadow(0 10px 24px rgba(192, 96, 122, 0.22));
+}
+
+.welcome-logo .logo-bg { fill: var(--color-surface); }
+
+.welcome-name {
+  margin: 0 0 6px;
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  color: var(--color-primary);
+}
+
+.welcome-title {
+  margin: 0 0 12px;
+  font-family: var(--font-display);
+  font-size: 2rem;
+  line-height: 1.15;
+  font-weight: 500;
+  color: var(--color-heading);
+}
+
+.welcome-lead {
+  margin: 0 auto 28px;
+  max-width: 34ch;
+  color: var(--color-muted);
+}
+
+.welcome-features {
+  list-style: none;
+  margin: 0 0 28px;
+  padding: 0;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.welcome-features li {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+}
+
+.welcome-features svg {
+  flex: none;
+  width: 40px;
+  height: 40px;
+  padding: 9px;
+  border-radius: 12px;
+  background: var(--color-soft);
+  fill: none;
+  stroke: var(--color-primary-dark);
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.welcome-features strong {
+  display: block;
+  color: var(--color-heading);
+  font-weight: 700;
+}
+
+.welcome-features span {
+  display: block;
+  color: var(--color-muted);
+  font-size: 0.92rem;
+}
+
+.welcome-start {
+  padding: 15px 20px;
+  font-size: 1.05rem;
+}
+
+.welcome-note {
+  margin: 14px 0 0;
+  font-size: 0.8rem;
+  color: var(--color-muted);
+}
+
+/* Singura animație: linia siglei se desenează, apoi apar firele de sutură */
+.logo-animated .logo-line {
+  stroke-dasharray: 100;
+  stroke-dashoffset: 100;
+  animation: draw-line 1.3s 0.2s ease-in-out forwards;
+}
+
+.logo-animated .logo-stitches {
+  opacity: 0;
+  animation: show-stitches 0.6s 1.3s ease-out forwards;
+}
+
+@keyframes draw-line {
+  to { stroke-dashoffset: 0; }
+}
+
+@keyframes show-stitches {
+  to { opacity: 0.55; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .logo-animated .logo-line,
+  .logo-animated .logo-stitches {
+    animation: none;
+    stroke-dashoffset: 0;
+    opacity: 0.55;
+  }
+}
+
+main {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 16px;
+}
+
+/* Spațiu jos, ca bara de navigare să nu acopere conținutul */
+.app.with-nav main {
+  padding-bottom: 96px;
+}
+
+/* ---------- Bara de navigare de jos ---------- */
+.bottom-nav {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  background: var(--color-surface);
+  border-top: 1px solid var(--color-border);
+  padding: 6px 8px calc(6px + env(safe-area-inset-bottom));
+  z-index: 10;
+}
+
+.bottom-nav-item {
+  flex: 1;
+  max-width: 160px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 6px 0;
+  border-radius: var(--radius);
+  color: var(--color-muted);
+  text-decoration: none;
+  font-size: 0.8rem;
+}
+
+.bottom-nav-item svg {
+  width: 24px;
+  height: 24px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.bottom-nav-item.active {
+  color: var(--color-primary);
+  background: var(--color-bg);
+  font-weight: 600;
+}
+
+/* ---------- Rezumatul din istoric ---------- */
+.summary-card {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: 14px 8px;
+  margin-bottom: 8px;
+}
+
+.summary-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 2px;
+}
+
+.summary-item + .summary-item {
+  border-left: 1px solid var(--color-border);
+}
+
+.summary-value {
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  font-weight: 500;
+  color: var(--color-primary);
+}
+
+.summary-label {
+  font-size: 0.75rem;
+  color: var(--color-muted);
+  padding: 0 4px;
+}
+
+.month-title {
+  margin: 22px 0 10px;
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  color: var(--color-heading);
+  font-weight: 500;
+}
+
+/* ---------- Ecran gol ---------- */
+.empty-state {
+  text-align: center;
+  padding: 32px 16px;
+}
+
+.empty-title {
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  font-weight: 500;
+  color: var(--color-heading);
+  margin: 0 0 6px;
+}
+
+.empty-icon {
+  width: 48px;
+  height: 48px;
+  fill: none;
+  stroke: var(--color-primary);
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  margin-bottom: 8px;
+}
+
+/* ---------- Ecranul unei poze ---------- */
+.link-back {
+  border: none;
+  background: none;
+  color: var(--color-primary);
+  font-size: 1rem;
+  padding: 0 0 12px;
+  cursor: pointer;
+}
+
+.detail-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  margin-top: 16px;
+}
+
+.detail-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 12px 14px;
+  font-size: 0.95rem;
+}
+
+.detail-row + .detail-row {
+  border-top: 1px solid var(--color-border);
+}
+
+.detail-row span:last-child {
+  text-align: right;
+}
+
+/* ---------- Jurnal ---------- */
+.segmented {
+  display: flex;
+  background: var(--color-border);
+  border-radius: var(--radius);
+  padding: 4px;
+  margin-bottom: 16px;
+}
+
+.segmented button {
+  flex: 1;
+  border: none;
+  background: none;
+  padding: 10px;
+  border-radius: calc(var(--radius) - 4px);
+  font-size: 0.95rem;
+  color: var(--color-muted);
+  cursor: pointer;
+}
+
+.segmented button.active {
+  background: var(--color-surface);
+  color: var(--color-heading);
+  font-weight: 700;
+}
+
+.form-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: 16px;
+}
+
+.form-card h3 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  font-weight: 500;
+  color: var(--color-heading);
+}
+
+.form-card .btn {
+  margin-top: 16px;
+}
+
+.field-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.slider-label {
+  display: flex;
+  justify-content: space-between;
+}
+
+.slider-label strong {
+  color: var(--color-primary);
+}
+
+.field input[type="range"] {
+  padding: 0;
+  border: none;
+  accent-color: var(--color-primary);
+}
+
+.entry-list {
+  list-style: none;
+  padding: 0;
+  margin: 16px 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.entry {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: 12px 14px;
+}
+
+.entry-title {
+  font-weight: 700;
+  color: var(--color-heading);
+  margin-bottom: 2px;
+}
+
+.icon-btn {
+  border: none;
+  background: none;
+  color: var(--color-muted);
+  font-size: 1.4rem;
+  line-height: 1;
+  padding: 4px 8px;
+  cursor: pointer;
+}
+
+/* ---------- Indicații la cameră ---------- */
+.tips {
+  margin: 12px 0 0;
+  padding-left: 20px;
+  color: var(--color-muted);
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.section-title {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+}
+
+.muted {
+  color: var(--color-muted);
+  font-size: 0.9rem;
+}
+
+.empty {
+  color: var(--color-muted);
+  text-align: center;
+  padding: 32px 16px;
+}
+
+/* Lista de poze: grilă cu două coloane */
+.photo-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 16px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+.photo-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+.photo-card a {
+  color: inherit;
+  text-decoration: none;
+  display: block;
+}
+
+.photo-card img {
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  object-fit: cover;
+  display: block;
+}
+
+.photo-date {
+  padding: 8px;
+  font-size: 0.85rem;
+}
+
+/* Eticheta „Galerie” de pe card */
+.badge {
+  display: inline-block;
+  margin-left: 6px;
+  padding: 1px 8px;
+  border-radius: 999px;
+  background: var(--color-border);
+  color: var(--color-muted);
+  font-size: 0.75rem;
+}
+
+/* Câmp de formular cu etichetă (de exemplu „Data pozei”) */
+.field {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 16px;
+  font-size: 0.9rem;
+  color: var(--color-muted);
+}
+
+.field input:not([type="range"]) {
+  width: 100%;
+  min-width: 0;
+  padding: 10px 12px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  font-size: 1rem;
+  color: var(--color-text);
+  background: var(--color-surface);
+}
+
+/* Butoane */
+.btn {
+  border: 1px solid transparent;
+  background: var(--color-soft);
+  color: var(--color-primary-dark);
+  font-weight: 700;
+  border-radius: var(--radius);
+  padding: 12px 20px;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-primary {
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+  color: white;
+}
+
+.btn-full {
+  width: 100%;
+}
+
+.btn-danger {
+  background: #fbe9e9;
+  color: var(--color-error);
+}
+
+.actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.actions .btn {
+  flex: 1;
+}
+
+/* Camera: poza veche stă exact peste imaginea live */
+.camera-wrapper {
+  position: relative;
+  width: 100%;
+  min-height: 240px;
+  background: black;
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+.camera-wrapper video {
+  width: 100%;
+  display: block;
+}
+
+.camera-overlay {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.35;          /* transparența pozei anterioare */
+  pointer-events: none;   /* nu blochează atingerile pe ecran */
+}
+
+.hint {
+  color: var(--color-muted);
+  font-size: 0.9rem;
+}
+
+.error {
+  color: var(--color-error);
+  font-size: 0.9rem;
+}
+
+.preview-image {
+  width: 100%;
+  border-radius: var(--radius);
+  display: block;
+}
