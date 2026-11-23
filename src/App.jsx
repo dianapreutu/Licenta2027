@@ -10,6 +10,7 @@ import EvolutionPage from './pages/EvolutionPage.jsx';
 import JournalPage from './pages/JournalPage.jsx';
 import WelcomePage from './pages/WelcomePage.jsx';
 import BackupPage from './pages/BackupPage.jsx';
+import ContourPage from './pages/ContourPage.jsx';
 import BottomNav from './components/BottomNav.jsx';
 import Logo from './components/Logo.jsx';
 import { hasSeenWelcome } from './services/welcome.js';
@@ -55,6 +56,7 @@ export default function App() {
           <Route path="/" element={<HistoryPage />} />
           <Route path="/camera" element={<CameraPage />} />
           <Route path="/poza/:id" element={<PhotoDetailPage />} />
+          <Route path="/poza/:id/contur" element={<ContourPage />} />
           <Route path="/evolutie" element={<EvolutionPage />} />
           <Route path="/jurnal" element={<JournalPage />} />
           <Route path="/backup" element={<BackupPage />} />

@@ -1,5 +1,5 @@
 // PhotoDetailPage.jsx
-// Ecranul unei poze: poza mare, data, sursa, măsurătorile (vin mai târziu) și ștergerea.
+// Ecranul unei poze: poza mare cu conturul desenat, data, sursa, măsurătorile și ștergerea.
 
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -38,7 +38,23 @@ export default function PhotoDetailPage() {
     <section>
       <button className="link-back" onClick={() => navigate('/')}>‹ Istoric</button>
 
-      {imageUrl && <img className="preview-image" src={imageUrl} alt="Poza cicatricii" />}
+      {imageUrl && (
+        <div className="contour-wrapper">
+          <img src={imageUrl} alt="Poza cicatricii" />
+          {/* Conturul salvat, desenat peste poză. viewBox = mărimea pozei originale,
+              deci punctele se potrivesc indiferent de mărimea ecranului. */}
+          {photo.contour && (
+            <svg
+              className="contour-overlay"
+              viewBox={`0 0 ${photo.imageWidth} ${photo.imageHeight}`}
+              preserveAspectRatio="none"
+              aria-hidden="true"
+            >
+              <polygon points={photo.contour.map(p => `${p.x},${p.y}`).join(' ')} />
+            </svg>
+          )}
+        </div>
+      )}
 
       <div className="detail-card">
         <div className="detail-row">
@@ -51,13 +67,34 @@ export default function PhotoDetailPage() {
         </div>
         <div className="detail-row">
           <span className="muted">Suprafață relativă</span>
-          <span>{photo.area ? `${Math.round(photo.area)} px²` : 'Conturul nu este desenat încă'}</span>
+          <span>{photo.area ? `${formatNumber(photo.area)} px²` : 'Conturul nu este desenat încă'}</span>
         </div>
+        {photo.length ? (
+          <div className="detail-row">
+            <span className="muted">Lungime relativă</span>
+            <span>{formatNumber(photo.length)} px</span>
+          </div>
+        ) : null}
       </div>
+
+      {photo.area ? (
+        <p className="hint">
+          Valorile sunt relative, în pixeli: pot fi comparate doar între poze făcute
+          de la o distanță și dintr-un unghi asemănătoare.
+        </p>
+      ) : null}
 
       <div className="actions">
         <button className="btn btn-danger" onClick={handleDelete}>Șterge poza</button>
+        <button className="btn btn-primary" onClick={() => navigate(`/poza/${photo.id}/contur`)}>
+          {photo.contour ? 'Modifică conturul' : 'Desenează conturul'}
+        </button>
       </div>
     </section>
   );
+}
+
+// 12345.6 → „12.346” (cu separatorul de mii din română)
+function formatNumber(value) {
+  return Math.round(value).toLocaleString('ro-RO');
 }

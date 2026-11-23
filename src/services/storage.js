@@ -107,9 +107,10 @@ export function savePhoto(blob, { takenAt, source = 'camera' } = {}) {
     blob: blob,
     createdAt: takenAt ?? new Date().toISOString(),
     source: source,
-    // Câmpuri pe care le vom completa în săptămânile următoare:
+    // Completate după desenarea conturului (ContourPage) și, mai târziu, verificarea calității:
     contour: null,  // punctele conturului desenat de utilizator
     area: null,     // suprafața în pixeli pătrați
+    length: null,   // lungimea în pixeli
     quality: null   // claritate, luminozitate, scor de comparabilitate
   };
   return run(STORE_PHOTOS, 'readwrite', store => store.add(photo)); // întoarce id-ul nou
@@ -127,6 +128,13 @@ export function getPhoto(id) {
 
 export function deletePhoto(id) {
   return remove(STORE_PHOTOS, id);
+}
+
+// Modifică doar câmpurile date ale unei poze (de ex. conturul și suprafața), restul rămân la fel.
+export async function updatePhoto(id, changes) {
+  const photo = await getPhoto(id);
+  if (!photo) throw new Error('Poza nu mai există.');
+  return run(STORE_PHOTOS, 'readwrite', store => store.put({ ...photo, ...changes }));
 }
 
 // ---------- Îngrijiri ----------

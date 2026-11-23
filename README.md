@@ -15,6 +15,8 @@ Aplicație web instalabilă pe telefon (PWA) pentru monitorizarea evoluției cic
 - Navigare între secțiunile Istoric, Evoluție și Jurnal
 - Pagina de început, la prima deschidere (se poate redeschide apăsând pe siglă)
 - Backup criptat: exportul datelor într-un fișier protejat cu parolă (AES-GCM, cheie derivată prin PBKDF2) și importul pe alt dispozitiv
+- Desenarea conturului cicatricii cu degetul, peste poză, cu calculul suprafeței relative (px²) și al lungimii relative (px)
+- Conturul salvat afișat peste poză; suprafața afișată și în istoric
 - Salvare locală (IndexedDB)
 Planul complet, cu starea fiecărei funcționalități, este în secțiunea [Planul de implementare](#planul-de-implementare).
  
@@ -39,6 +41,7 @@ Licenta2027/
 │   ├── pages/                   ecranele aplicației
 │   │   ├── BackupPage.jsx       exportul și importul datelor criptate
 │   │   ├── CameraPage.jsx       camera, încărcarea din galerie, previzualizarea
+│   │   ├── ContourPage.jsx      desenarea conturului cicatricii și calculul măsurătorilor
 │   │   ├── EvolutionPage.jsx    evoluția (graficul vine după desenarea conturului)
 │   │   ├── HistoryPage.jsx      istoricul pozelor, cu rezumat și grupare pe luni
 │   │   ├── JournalPage.jsx      jurnalul de îngrijiri și simptome
@@ -47,7 +50,7 @@ Licenta2027/
 │   ├── services/                logica aplicației, separată de interfață
 │   │   ├── backup.js            criptarea, exportul și importul datelor
 │   │   ├── camera.js            camera telefonului
-│   │   ├── contour.js           calculul suprafeței conturului
+│   │   ├── contour.js           suprafața, lungimea și verificarea conturului
 │   │   ├── format.js            formatarea datelor
 │   │   ├── quality.js           verificarea calității pozei
 │   │   ├── storage.js           salvarea datelor în IndexedDB
@@ -108,11 +111,12 @@ Se bifează `[x]` pe măsură ce sunt terminate.
 - [ ] Claritate: diferențele dintre pixelii vecini; avertizare la poze mișcate
 - [ ] La cameră: „Refă poza”; la galerie: „Alege altă poză” sau salvare marcată ca nesigură
 #### 3. Delimitarea cicatricii și suprafața relativă (`src/services/contour.js`)
-- [ ] Desenarea conturului cu degetul pe poză (canvas)
-- [ ] Corectarea / refacerea conturului
+- [x] Desenarea conturului cu degetul pe poză (canvas)
+- [x] Corectarea / refacerea conturului
 - [x] Calculul suprafeței relative în pixeli pătrați (funcția `calculateArea`)
-- [ ] Lungimea relativă: latura lungă a dreptunghiului de arie minimă rotit după orientarea cicatricii
-- [ ] Salvarea conturului și a suprafeței la poză
+- [x] Lungimea relativă: latura lungă a dreptunghiului de arie minimă rotit după orientarea cicatricii
+- [x] Salvarea conturului și a suprafeței la poză
+- [x] Verificarea conturului: respinge conturul prea mic sau o linie trasă dus-întors
 #### 4. Experimentele (partea de cercetare a lucrării)
 - [ ] Repetabilitate: aceeași cicatrice, 5–10 poze independente (telefonul repoziționat), coeficientul de variație al suprafeței pentru fiecare cicatrice
 - [ ] Acuratețea delimitării: comparație cu un contur de referință (IoU), plus suprafața și lungimea

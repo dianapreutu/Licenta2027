@@ -17,6 +17,10 @@ export default function PhotoCard({ photo }) {
           {formatDate(photo.createdAt)}
           {/* Pozele încărcate din galerie sunt marcate, pentru că nu au avut ghidaj */}
           {photo.source === 'galerie' && <span className="badge">Galerie</span>}
+        {/* Suprafața, dacă a fost desenat conturul */}
+        {photo.area ? (
+          <span className="photo-area">{Math.round(photo.area).toLocaleString('ro-RO')} px²</span>
+        ) : null}
         </div>
       </Link>
     </li>
