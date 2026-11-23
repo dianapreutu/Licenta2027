@@ -5,7 +5,7 @@
 // Baza de date are trei „tabele” (object stores):
 // - photos:   pozele cicatricii;
 // - care:     îngrijirile (de ex. „gel cu silicon”, cu data de început și de sfârșit);
-// - symptoms: simptomele notate de utilizator (mâncărime, durere, tensiune, 1–10).
+// - symptoms: simptomele notate de utilizator (iritație, durere, tensiune, 1–10).
 
 const DB_NAME = 'scar-monitor';
 const DB_VERSION = 2; // versiunea 2 a adăugat tabelele pentru îngrijiri și simptome

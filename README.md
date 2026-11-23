@@ -11,7 +11,7 @@ Aplicație web instalabilă pe telefon (PWA) pentru monitorizarea evoluției cic
 - Indicații de fotografiere pe ecranul camerei
 - Istoric cu rezumat (zile de monitorizare, număr de poze, ultima poză) și pozele grupate pe luni
 - Ecranul unei poze: poza mare, data, sursa, ștergerea pozei
-- Jurnal de îngrijiri (denumire, început, sfârșit) și de simptome (mâncărime, durere, tensiune, 1–10)
+- Jurnal de îngrijiri (denumire, început, sfârșit) și de simptome (iritație, durere, tensiune, 1–10)
 - Navigare între secțiunile Istoric, Evoluție și Jurnal
 - Pagina de început, la prima deschidere (se poate redeschide apăsând pe siglă)
 - Salvare locală (IndexedDB)
@@ -125,7 +125,7 @@ Se bifează `[x]` pe măsură ce sunt terminate.
 - [ ] Diferența de culoare dintre cicatrice și un inel de piele din jur (orientativ)
 #### 7. Îngrijiri, simptome și grafice
 - [x] Jurnal de îngrijiri: denumire, data de început, data de sfârșit
-- [x] Simptome pe o scală de la 1 la 10: mâncărime, durere, senzație de tensiune
+- [x] Simptome pe o scală de la 1 la 10: iritație, durere, senzație de tensiune
 - [ ] Graficul evoluției suprafeței în timp, cu banda variației normale
 - [ ] Îngrijirile marcate pe axa timpului; comparația tendințelor dintre perioade (fără concluzii despre tratament)
 - [ ] Simptomele pe aceeași axă a timpului

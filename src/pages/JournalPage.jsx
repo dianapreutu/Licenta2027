@@ -106,7 +106,7 @@ function CareSection() {
 // ---------- Simptome ----------
 
 const SYMPTOMS = [
-  { key: 'itch', label: 'Mâncărime' },
+  { key: 'itch', label: 'Iritație' },
   { key: 'pain', label: 'Durere' },
   { key: 'tightness', label: 'Senzație de tensiune' }
 ];
@@ -172,7 +172,7 @@ function SymptomsSection() {
               <div>
                 <div className="entry-title">{formatDay(item.date)}</div>
                 <div className="muted">
-                  Mâncărime {item.itch} · Durere {item.pain} · Tensiune {item.tightness}
+                  Iritație {item.itch} · Durere {item.pain} · Tensiune {item.tightness}
                 </div>
               </div>
               <button className="icon-btn" onClick={() => handleDelete(item.id)} aria-label="Șterge">×</button>
