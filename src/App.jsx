@@ -3,6 +3,7 @@
 
 import { useEffect } from 'react';
 import { Routes, Route, Link, useLocation, useNavigate } from 'react-router-dom';
+import HomePage from './pages/HomePage.jsx';
 import HistoryPage from './pages/HistoryPage.jsx';
 import CameraPage from './pages/CameraPage.jsx';
 import PhotoDetailPage from './pages/PhotoDetailPage.jsx';
@@ -53,7 +54,8 @@ export default function App() {
 
       <main>
         <Routes>
-          <Route path="/" element={<HistoryPage />} />
+          <Route path="/" element={<HomePage />} />
+          <Route path="/istoric" element={<HistoryPage />} />
           <Route path="/camera" element={<CameraPage />} />
           <Route path="/poza/:id" element={<PhotoDetailPage />} />
           <Route path="/poza/:id/contur" element={<ContourPage />} />

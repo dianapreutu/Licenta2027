@@ -49,6 +49,14 @@ export default function CameraPage() {
         else stream = newStream;
       } catch (err) {
         if (closed) return;
+        // Pe o adresă nesigură camera nu va porni oricât am încerca
+        if (err.name === 'InsecureContext') {
+          setError(
+            'Camera nu poate porni pe această adresă. Deschide aplicația prin https ' +
+            '(site-ul de pe GitHub Pages) sau, pe laptop, la http://localhost.'
+          );
+          return;
+        }
         if (attemptsLeft > 0) {
           setTimeout(() => open(attemptsLeft - 1), 500);
         } else {
@@ -80,7 +88,7 @@ export default function CameraPage() {
       takenAt: new Date(takenAt).toISOString(),
       source: fromGallery ? 'galerie' : 'camera'
     });
-    navigate('/');
+    navigate('/istoric');
   }
 
   // ---------- Pasul 2: previzualizare ----------
@@ -108,7 +116,7 @@ export default function CameraPage() {
 
         <div className="actions">
           {fromGallery ? (
-            <button className="btn" onClick={() => navigate('/')}>Renunță</button>
+            <button className="btn" onClick={() => navigate('/istoric')}>Renunță</button>
           ) : (
             <button className="btn" onClick={() => setCaptured(null)}>Refă poza</button>
           )}
@@ -138,7 +146,7 @@ export default function CameraPage() {
       )}
 
       <div className="actions">
-        <button className="btn" onClick={() => navigate('/')}>Înapoi</button>
+        <button className="btn" onClick={() => navigate('/istoric')}>Înapoi</button>
         <button className="btn btn-primary" onClick={handleCapture} disabled={Boolean(error)}>
           Fă poza
         </button>

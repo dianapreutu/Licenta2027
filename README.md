@@ -4,6 +4,7 @@ Aplicație web instalabilă pe telefon (PWA) pentru monitorizarea evoluției cic
  
 ## Funcționalități implementate
  
+- Ecranul Acasă: ultima poză (cu conturul desenat), îngrijirile în curs, pe scurt despre aplicație și plăcile „Explorează” către celelalte secțiuni
 - Istoricul pozelor, în ordine cronologică
 - Fotografiere cu camera telefonului, cu poza anterioară suprapusă semitransparent pentru aliniere
 - Încărcare din galerie, cu data fișierului (modificabilă) și eticheta „Galerie”
@@ -12,7 +13,7 @@ Aplicație web instalabilă pe telefon (PWA) pentru monitorizarea evoluției cic
 - Istoric cu rezumat (zile de monitorizare, număr de poze, ultima poză) și pozele grupate pe luni
 - Ecranul unei poze: poza mare, data, sursa, ștergerea pozei
 - Jurnal de îngrijiri (denumire, început, sfârșit) și de simptome (iritație, durere, tensiune, 1–10)
-- Navigare între secțiunile Istoric, Evoluție și Jurnal
+- Navigare între secțiunile Acasă, Istoric, Evoluție și Jurnal
 - Pagina de început, la prima deschidere (se poate redeschide apăsând pe siglă)
 - Backup criptat: exportul datelor într-un fișier protejat cu parolă (AES-GCM, cheie derivată prin PBKDF2) și importul pe alt dispozitiv
 - Desenarea conturului cicatricii cu degetul, peste poză, cu calculul suprafeței relative (px²) și al lungimii relative (px)
@@ -37,12 +38,14 @@ Licenta2027/
 │   ├── components/              bucăți de interfață refolosite
 │   │   ├── BottomNav.jsx        bara de navigare de jos
 │   │   ├── Logo.jsx             sigla aplicației
-│   │   └── PhotoCard.jsx        un card din istoric
+│   │   ├── PhotoCard.jsx        un card din istoric
+│   │   └── PhotoWithContour.jsx o poză cu conturul desenat peste ea
 │   ├── pages/                   ecranele aplicației
 │   │   ├── BackupPage.jsx       exportul și importul datelor criptate
 │   │   ├── CameraPage.jsx       camera, încărcarea din galerie, previzualizarea
 │   │   ├── ContourPage.jsx      desenarea conturului cicatricii și calculul măsurătorilor
 │   │   ├── EvolutionPage.jsx    evoluția (graficul vine după desenarea conturului)
+│   │   ├── HomePage.jsx         ecranul Acasă
 │   │   ├── HistoryPage.jsx      istoricul pozelor, cu rezumat și grupare pe luni
 │   │   ├── JournalPage.jsx      jurnalul de îngrijiri și simptome
 │   │   ├── PhotoDetailPage.jsx  ecranul unei poze
@@ -52,6 +55,7 @@ Licenta2027/
 │   │   ├── camera.js            camera telefonului
 │   │   ├── contour.js           suprafața, lungimea și verificarea conturului
 │   │   ├── format.js            formatarea datelor
+│   │   ├── history.js           schimbarea de suprafață dintre ultimele două poze
 │   │   ├── quality.js           verificarea calității pozei
 │   │   ├── storage.js           salvarea datelor în IndexedDB
 │   │   ├── useObjectUrl.js      afișarea imaginilor salvate
@@ -104,7 +108,8 @@ Se bifează `[x]` pe măsură ce sunt terminate.
 - [x] Indicații de fotografiere: cicatricea complet vizibilă, telefon perpendicular, distanță asemănătoare
 - [x] Ecranul unei poze: poza mare, data, sursa, ștergerea pozei
 - [x] Rezumatul istoricului și gruparea pozelor pe luni
-- [x] Bara de navigare: Istoric, Evoluție, Jurnal
+- [x] Bara de navigare: Acasă, Istoric, Evoluție, Jurnal
+- [x] Ecranul Acasă: ultima poză, îngrijirile în curs, „Despre aplicație”, plăcile „Explorează”
 - [x] Pagina de început și sigla aplicației
 #### 2. Verificări simple de calitate (`src/services/quality.js`)
 - [ ] Luminozitate: media pixelilor; avertizare la poze prea întunecate sau supraexpuse

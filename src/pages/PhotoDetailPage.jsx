@@ -20,7 +20,7 @@ export default function PhotoDetailPage() {
   async function handleDelete() {
     if (window.confirm('Ștergi definitiv această poză?')) {
       await deletePhoto(photo.id);
-      navigate('/');
+      navigate('/istoric');
     }
   }
 
@@ -29,14 +29,14 @@ export default function PhotoDetailPage() {
     return (
       <section className="empty-state">
         <p className="empty-title">Poza nu mai există</p>
-        <button className="btn" onClick={() => navigate('/')}>Înapoi la istoric</button>
+        <button className="btn" onClick={() => navigate('/istoric')}>Înapoi la istoric</button>
       </section>
     );
   }
 
   return (
     <section>
-      <button className="link-back" onClick={() => navigate('/')}>‹ Istoric</button>
+      <button className="link-back" onClick={() => navigate('/istoric')}>‹ Istoric</button>
 
       {imageUrl && (
         <div className="contour-wrapper">

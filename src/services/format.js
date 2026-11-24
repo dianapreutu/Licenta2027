@@ -27,10 +27,17 @@ export function formatMonth(dateString) {
   return text.charAt(0).toUpperCase() + text.slice(1);
 }
 
-// Numărul de zile întregi dintre două date
+// Numărul de zile din calendar dintre două date (ora nu contează:
+// de luni seara până marți dimineața este 1 zi).
 export function daysBetween(from, to) {
   const msPerDay = 24 * 60 * 60 * 1000;
-  return Math.round((new Date(to) - new Date(from)) / msPerDay);
+  return Math.round((startOfDay(to) - startOfDay(from)) / msPerDay);
+}
+
+// Aceeași zi, la ora 00:00 (ora locală)
+function startOfDay(date) {
+  const d = new Date(date);
+  return new Date(d.getFullYear(), d.getMonth(), d.getDate());
 }
 
 // Textul cerut de <input type="datetime-local">, de forma „2026-11-04T21:45”, în ora locală

@@ -4,6 +4,14 @@
 // Pornește camera și afișează imaginea live în elementul <video>.
 // Întoarce fluxul video ("stream"), ca să poată fi oprit mai târziu.
 export async function startCamera(videoElement) {
+  // Browserul dă acces la cameră doar paginilor sigure: https sau localhost.
+  // Pe o adresă http obișnuită (de ex. http://192.168.x.x), navigator.mediaDevices lipsește.
+  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+    const error = new Error('Camera este disponibilă doar prin https sau pe localhost.');
+    error.name = 'InsecureContext';
+    throw error;
+  }
+
   const stream = await navigator.mediaDevices.getUserMedia({
     video: {
       facingMode: 'environment', // camera din spate a telefonului

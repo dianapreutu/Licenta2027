@@ -129,7 +129,7 @@ function ImportSection() {
       </button>
       <StatusMessage status={status} />
       {status?.type === 'ok' && (
-        <button className="btn btn-full" type="button" onClick={() => navigate('/')}>Vezi istoricul</button>
+        <button className="btn btn-full" type="button" onClick={() => navigate('/istoric')}>Vezi istoricul</button>
       )}
     </form>
   );
