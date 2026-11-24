@@ -4,6 +4,7 @@ Aplicație web instalabilă pe telefon (PWA) pentru monitorizarea evoluției cic
  
 ## Funcționalități implementate
  
+- Ecranul Acasă: ultima poză (cu conturul desenat), îngrijirile în curs, pe scurt despre aplicație și plăcile „Explorează” către celelalte secțiuni
 - Istoricul pozelor, în ordine cronologică
 - Fotografiere cu camera telefonului, cu poza anterioară suprapusă semitransparent pentru aliniere
 - Încărcare din galerie, cu data fișierului (modificabilă) și eticheta „Galerie”
@@ -11,9 +12,12 @@ Aplicație web instalabilă pe telefon (PWA) pentru monitorizarea evoluției cic
 - Indicații de fotografiere pe ecranul camerei
 - Istoric cu rezumat (zile de monitorizare, număr de poze, ultima poză) și pozele grupate pe luni
 - Ecranul unei poze: poza mare, data, sursa, ștergerea pozei
-- Jurnal de îngrijiri (denumire, început, sfârșit) și de simptome (mâncărime, durere, tensiune, 1–10)
-- Navigare între secțiunile Istoric, Evoluție și Jurnal
+- Jurnal de îngrijiri (denumire, început, sfârșit) și de simptome (iritație, durere, tensiune, 1–10)
+- Navigare între secțiunile Acasă, Istoric, Evoluție și Jurnal
 - Pagina de început, la prima deschidere (se poate redeschide apăsând pe siglă)
+- Backup criptat: exportul datelor într-un fișier protejat cu parolă (AES-GCM, cheie derivată prin PBKDF2) și importul pe alt dispozitiv
+- Desenarea conturului cicatricii cu degetul, peste poză, cu calculul suprafeței relative (px²) și al lungimii relative (px)
+- Conturul salvat afișat peste poză; suprafața afișată și în istoric
 - Salvare locală (IndexedDB)
 Planul complet, cu starea fiecărei funcționalități, este în secțiunea [Planul de implementare](#planul-de-implementare).
  
@@ -34,18 +38,24 @@ Licenta2027/
 │   ├── components/              bucăți de interfață refolosite
 │   │   ├── BottomNav.jsx        bara de navigare de jos
 │   │   ├── Logo.jsx             sigla aplicației
-│   │   └── PhotoCard.jsx        un card din istoric
+│   │   ├── PhotoCard.jsx        un card din istoric
+│   │   └── PhotoWithContour.jsx o poză cu conturul desenat peste ea
 │   ├── pages/                   ecranele aplicației
+│   │   ├── BackupPage.jsx       exportul și importul datelor criptate
 │   │   ├── CameraPage.jsx       camera, încărcarea din galerie, previzualizarea
+│   │   ├── ContourPage.jsx      desenarea conturului cicatricii și calculul măsurătorilor
 │   │   ├── EvolutionPage.jsx    evoluția (graficul vine după desenarea conturului)
+│   │   ├── HomePage.jsx         ecranul Acasă
 │   │   ├── HistoryPage.jsx      istoricul pozelor, cu rezumat și grupare pe luni
 │   │   ├── JournalPage.jsx      jurnalul de îngrijiri și simptome
 │   │   ├── PhotoDetailPage.jsx  ecranul unei poze
 │   │   └── WelcomePage.jsx      pagina de început
 │   ├── services/                logica aplicației, separată de interfață
+│   │   ├── backup.js            criptarea, exportul și importul datelor
 │   │   ├── camera.js            camera telefonului
-│   │   ├── contour.js           calculul suprafeței conturului
+│   │   ├── contour.js           suprafața, lungimea și verificarea conturului
 │   │   ├── format.js            formatarea datelor
+│   │   ├── history.js           schimbarea de suprafață dintre ultimele două poze
 │   │   ├── quality.js           verificarea calității pozei
 │   │   ├── storage.js           salvarea datelor în IndexedDB
 │   │   ├── useObjectUrl.js      afișarea imaginilor salvate
@@ -98,18 +108,20 @@ Se bifează `[x]` pe măsură ce sunt terminate.
 - [x] Indicații de fotografiere: cicatricea complet vizibilă, telefon perpendicular, distanță asemănătoare
 - [x] Ecranul unei poze: poza mare, data, sursa, ștergerea pozei
 - [x] Rezumatul istoricului și gruparea pozelor pe luni
-- [x] Bara de navigare: Istoric, Evoluție, Jurnal
+- [x] Bara de navigare: Acasă, Istoric, Evoluție, Jurnal
+- [x] Ecranul Acasă: ultima poză, îngrijirile în curs, „Despre aplicație”, plăcile „Explorează”
 - [x] Pagina de început și sigla aplicației
 #### 2. Verificări simple de calitate (`src/services/quality.js`)
 - [ ] Luminozitate: media pixelilor; avertizare la poze prea întunecate sau supraexpuse
 - [ ] Claritate: diferențele dintre pixelii vecini; avertizare la poze mișcate
 - [ ] La cameră: „Refă poza”; la galerie: „Alege altă poză” sau salvare marcată ca nesigură
 #### 3. Delimitarea cicatricii și suprafața relativă (`src/services/contour.js`)
-- [ ] Desenarea conturului cu degetul pe poză (canvas)
-- [ ] Corectarea / refacerea conturului
+- [x] Desenarea conturului cu degetul pe poză (canvas)
+- [x] Corectarea / refacerea conturului
 - [x] Calculul suprafeței relative în pixeli pătrați (funcția `calculateArea`)
-- [ ] Lungimea relativă: latura lungă a dreptunghiului de arie minimă rotit după orientarea cicatricii
-- [ ] Salvarea conturului și a suprafeței la poză
+- [x] Lungimea relativă: latura lungă a dreptunghiului de arie minimă rotit după orientarea cicatricii
+- [x] Salvarea conturului și a suprafeței la poză
+- [x] Verificarea conturului: respinge conturul prea mic sau o linie trasă dus-întors
 #### 4. Experimentele (partea de cercetare a lucrării)
 - [ ] Repetabilitate: aceeași cicatrice, 5–10 poze independente (telefonul repoziționat), coeficientul de variație al suprafeței pentru fiecare cicatrice
 - [ ] Acuratețea delimitării: comparație cu un contur de referință (IoU), plus suprafața și lungimea
@@ -125,7 +137,7 @@ Se bifează `[x]` pe măsură ce sunt terminate.
 - [ ] Diferența de culoare dintre cicatrice și un inel de piele din jur (orientativ)
 #### 7. Îngrijiri, simptome și grafice
 - [x] Jurnal de îngrijiri: denumire, data de început, data de sfârșit
-- [x] Simptome pe o scală de la 1 la 10: mâncărime, durere, senzație de tensiune
+- [x] Simptome pe o scală de la 1 la 10: iritație, durere, senzație de tensiune
 - [ ] Graficul evoluției suprafeței în timp, cu banda variației normale
 - [ ] Îngrijirile marcate pe axa timpului; comparația tendințelor dintre perioade (fără concluzii despre tratament)
 - [ ] Simptomele pe aceeași axă a timpului
@@ -134,7 +146,9 @@ Se bifează `[x]` pe măsură ce sunt terminate.
 - [ ] Raport PDF pentru consultație (poze, grafice, îngrijiri, simptome)
 - [ ] Comparație vizuală înainte/după, cu bară glisantă
 - [ ] Notificări pentru poze regulate
-- [ ] Exportul și importul datelor (mutarea pe un telefon nou)
+- [x] Exportul și importul datelor, criptate cu parolă (mutarea pe alt dispozitiv)
+- [ ] Sincronizare automată opțională, criptată (cu cont)
+- [ ] Cod PIN la deschiderea aplicației
 ### De pregătit pentru demo
 - [ ] Set de poze demonstrative (aceeași „cicatrice” fotografiată în zile diferite), ca istoricul și graficele să aibă date
 - [ ] Testarea pe telefon, prin GitHub Pages
@@ -143,5 +157,5 @@ Se bifează `[x]` pe măsură ce sunt terminate.
 - Scop informativ și de monitorizare personală; fără diagnostic sau recomandări de tratament
 - Măsurători relative, în pixeli, comparabile doar între poze făcute în condiții similare
 - Pragul este valabil pentru condițiile testate și nu dovedește singur o schimbare biologică
-- Datele sunt doar pe telefon: se pierd dacă telefonul se pierde (de aici, exportul din Etapa 2)
+- Datele sunt doar pe dispozitiv: nu se sincronizează automat; mutarea se face prin backup-ul criptat
 - Culoarea poate fi influențată de lumină, balansul de alb, tonul pielii și telefon

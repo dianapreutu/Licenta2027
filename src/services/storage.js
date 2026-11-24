@@ -5,7 +5,7 @@
 // Baza de date are trei „tabele” (object stores):
 // - photos:   pozele cicatricii;
 // - care:     îngrijirile (de ex. „gel cu silicon”, cu data de început și de sfârșit);
-// - symptoms: simptomele notate de utilizator (mâncărime, durere, tensiune, 1–10).
+// - symptoms: simptomele notate de utilizator (iritație, durere, tensiune, 1–10).
 
 const DB_NAME = 'scar-monitor';
 const DB_VERSION = 2; // versiunea 2 a adăugat tabelele pentru îngrijiri și simptome
@@ -57,6 +57,45 @@ function remove(storeName, id) {
   return run(storeName, 'readwrite', store => store.delete(id));
 }
 
+// ---------- Folosite de backup (export / import) ----------
+
+// Toate datele din aplicație, ca să poată fi exportate.
+export async function getEverything() {
+  const [photos, care, symptoms] = await Promise.all([
+    run(STORE_PHOTOS, 'readonly', store => store.getAll()),
+    run(STORE_CARE, 'readonly', store => store.getAll()),
+    run(STORE_SYMPTOMS, 'readonly', store => store.getAll())
+  ]);
+  return { photos, care, symptoms };
+}
+
+// Scrie datele importate.
+// - replace = true: șterge mai întâi tot ce există, apoi pune datele din fișier;
+// - replace = false: le adaugă pe lângă cele existente (cu id-uri noi).
+// Totul se face într-o singură tranzacție: dacă ceva nu merge, nu se schimbă nimic.
+export async function writeEverything({ photos, care, symptoms }, replace) {
+  const db = await openDatabase();
+  const stores = [STORE_PHOTOS, STORE_CARE, STORE_SYMPTOMS];
+
+  return new Promise((resolve, reject) => {
+    const transaction = db.transaction(stores, 'readwrite');
+    transaction.oncomplete = () => resolve();
+    transaction.onerror = () => reject(transaction.error);
+    transaction.onabort = () => reject(transaction.error);
+
+    const items = { [STORE_PHOTOS]: photos, [STORE_CARE]: care, [STORE_SYMPTOMS]: symptoms };
+    for (const name of stores) {
+      const store = transaction.objectStore(name);
+      if (replace) store.clear();
+      for (const item of items[name]) {
+        const { id, ...withoutId } = item;
+        // la înlocuire păstrăm id-urile originale; la adăugare primesc id-uri noi
+        store.add(replace ? item : withoutId);
+      }
+    }
+  });
+}
+
 // ---------- Poze ----------
 
 // Salvează o poză nouă.
@@ -68,9 +107,10 @@ export function savePhoto(blob, { takenAt, source = 'camera' } = {}) {
     blob: blob,
     createdAt: takenAt ?? new Date().toISOString(),
     source: source,
-    // Câmpuri pe care le vom completa în săptămânile următoare:
+    // Completate după desenarea conturului (ContourPage) și, mai târziu, verificarea calității:
     contour: null,  // punctele conturului desenat de utilizator
     area: null,     // suprafața în pixeli pătrați
+    length: null,   // lungimea în pixeli
     quality: null   // claritate, luminozitate, scor de comparabilitate
   };
   return run(STORE_PHOTOS, 'readwrite', store => store.add(photo)); // întoarce id-ul nou
@@ -88,6 +128,13 @@ export function getPhoto(id) {
 
 export function deletePhoto(id) {
   return remove(STORE_PHOTOS, id);
+}
+
+// Modifică doar câmpurile date ale unei poze (de ex. conturul și suprafața), restul rămân la fel.
+export async function updatePhoto(id, changes) {
+  const photo = await getPhoto(id);
+  if (!photo) throw new Error('Poza nu mai există.');
+  return run(STORE_PHOTOS, 'readwrite', store => store.put({ ...photo, ...changes }));
 }
 
 // ---------- Îngrijiri ----------
